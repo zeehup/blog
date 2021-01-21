@@ -1,10 +1,5 @@
-import React, {useEffect} from 'react';
-import ReactMarkdown from 'react-markdown';
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
-import {dark} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import Gfm from 'remark-gfm';
-
-import marked from 'marked';
+import React from 'react';
+import styled from 'styled-components';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-okaidia.css';
 import 'prismjs/components/prism-bash.min';
@@ -12,38 +7,68 @@ import 'prismjs/components/prism-javascript.min';
 import 'prismjs/components/prism-java.min';
 import 'prismjs/components/prism-jsx.min';
 import 'prismjs/components/prism-css.min';
+import marked from 'marked';
 
-
-const source = `
-# 제목 1
-## 제목 2
-### 제목 3
-#### 제목 4
-##### 제목 5
-
-A paragraph with *emphasis* and **strong importance**.
-
-> A block quote with ~strikethrough~ and a URL: https://reactjs.org.
-
-* Lists
-* [ ] todo
-* [x] done
-
-A table:
-
-|one|two|
-|---|---|
-|a|b|
-
-**굵게**
-*기울이기*
-
-> 인용문
-
-\`\`\`
-console.log('test');
-\`\`\`
+const MarkdownContent = styled.div`
+    blockquote {
+        border-left: 4px solid skyblue;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.1);
+        margin-left: 0;
+        margin-right: 0;
+        p {
+            margin: 0;
+        }
+    }
+    
+    h1, h2, h3, h4 {
+        font-weight: 500;
+    }
+    
+    h1, h2, h3, h4, h5, p {
+      code {
+        // font-family: 'D2 coding';
+        background: mintcream;
+        padding: 0.25rem;
+        color: lightskyblue;
+        border: 1px solid lightgray;
+        border-radius: 2px;
+      }
+    }
+    
+    code[class*="language-"], pre[class*="language-"] {
+      // font-family: 'D2 Coding';
+    }
+    
+    a {
+      color: red;
+      &:hover {
+        color: green;
+      }
+    }
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    table, th, td {
+      border: 1px solid darkgray;
+    }
+    
+    th, td {
+      font-size: 0.9rem;
+      padding: 0.25rem;
+      text-align: left;
+    }
+    
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+      display: block;
+    }
 `;
+
 
 const source2 = `
 # h1
@@ -69,15 +94,17 @@ $ ps -ef | grep node
 Integer age = 31;
 String name = "이수민";
 \`\`\`
+
+텍스트 사이의 \`코드\`
+
+[링크](https://google.com)
+
+## 이미지
+![imageholder](http://via.placeholder.com/350x150)
 `;
 
-const renderers = {
-  code: ({language, value}) => {
-    return <SyntaxHighlighter style={dark} language={language} children={value} />
-  }
-}
 
-function App() {
+const App = () => {
   const html = marked(source2, {breaks: true, sanitize: true});
   const markup = {
     __html: html
@@ -87,14 +114,8 @@ function App() {
 
   return (
     <div>
-      <ReactMarkdown
-          source={source}
-          plugins={[Gfm]}
-          renderers={renderers}
-          skipHtml={false}
-          escapeHtml={false} />
-      <hr/>
-      <div dangerouslySetInnerHTML={markup} />
+      <MarkdownContent dangerouslySetInnerHTML={markup}>
+      </MarkdownContent>
     </div>
   );
 }
